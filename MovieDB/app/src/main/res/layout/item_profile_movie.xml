@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_marginBottom="35dp">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/aboveBackground"
+        android:elevation="10dp"
+        app:cardCornerRadius="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/backdrop_cardview"
+                android:layout_width="match_parent"
+                android:backgroundTint="@android:color/transparent"
+                android:layout_height="160dp">
+
+                <ImageView
+                    android:id="@+id/backdrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:background="@drawable/bg_gradient_profile_backdrop"
+                    android:layout_gravity="bottom" />
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                app:layout_constraintBottom_toTopOf="@+id/overview"
+                app:layout_constraintEnd_toEndOf="@+id/backdrop_cardview"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/backdrop_cardview">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintWidth_percent="0.8"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Mortal Kombat" />
+
+                <ImageButton
+                    android:id="@+id/to_watch_icon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@null"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/ic_to_watch_filled"
+                    app:layout_constraintEnd_toStartOf="@+id/watched_icon"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/watched_icon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@null"
+                    android:src="@drawable/ic_watched"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/accent" />
+
+                <TextView
+                    android:id="@+id/score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/title"
+                    tools:text="8.7" />
+
+                <ImageView
+                    android:id="@+id/score_stars_back"
+                    android:layout_width="55dp"
+                    android:layout_height="10dp"
+                    android:layout_gravity="center_vertical|start"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="1dp"
+                    android:background="@drawable/icon_five_stars"
+                    android:backgroundTint="@color/text"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@id/score"
+                    app:layout_constraintTop_toBottomOf="@id/title"
+                    app:tint="@color/accent" />
+
+                <ImageView
+                    android:id="@+id/score_stars"
+                    android:layout_width="55dp"
+                    android:layout_height="10dp"
+                    android:layout_gravity="center_vertical|start"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="1dp"
+                    android:background="@drawable/bkgd_level"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@id/score"
+                    app:layout_constraintTop_toBottomOf="@id/title"
+                    app:tint="@color/accent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/overview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="10dp"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:justificationMode="inter_word" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

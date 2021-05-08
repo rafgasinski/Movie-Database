@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginBottom="16dp">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#32373e"
+        app:cardElevation="6dp"
+        app:cardCornerRadius="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="140dp"
+                android:layout_height="205dp"
+                app:cardElevation="10dp"
+                android:layout_marginStart="1dp"
+                android:layout_marginEnd="12dp"
+                app:cardCornerRadius="3dp">
+
+                <ImageView
+                    android:id="@+id/poster"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/gradient_background" />
+
+            </androidx.cardview.widget.CardView>
+
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <HorizontalScrollView android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <TextView
+                        android:id="@+id/search_title"
+                        android:layout_width="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="10dp"
+                        tools:text="Mortal Kombat"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:layout_height="fill_parent"
+                        android:scrollHorizontally="true"
+                        android:singleLine="true"
+                        android:layout_weight="1.0"/>
+
+                </HorizontalScrollView>
+
+                <TextView
+                    android:id="@+id/overview"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginTop="10dp"
+                    android:justificationMode="inter_word"
+                    android:textColor="@color/text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:ellipsize="end"
+                    android:maxLines="8"
+                    tools:text="Washed-up MMA fighter Cole Young, unaware of his heritage, and hunted by Emperor Shang Tsung's best warrior, Sub-Zero, seeks out and trains with Earth's greatest champions as he prepares to stand against the enemies of Outworld in a high stakes battle for the universe."/>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+</LinearLayout>

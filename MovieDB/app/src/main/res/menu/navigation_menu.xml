@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/homeFragment"
+        android:title="@string/home"
+        android:enabled="true"
+        android:icon="@drawable/ic_home"
+        android:menuCategory="secondary"
+        app:cnb_backgroundColor="@color/background"
+        app:cnb_iconColor="@color/white"
+        app:cnb_iconTintMode="src_in"
+        app:cnb_textColor="@color/white"/>
+
+    <item
+        android:id="@+id/searchFragment"
+        android:title="@string/search"
+        android:enabled="true"
+        android:icon="@drawable/icon_search_shorter"
+        app:cnb_backgroundColor="@color/background"
+        android:menuCategory="secondary"
+        app:cnb_iconColor="@color/white"
+        app:cnb_iconTintMode="src_in"
+        app:cnb_textColor="@color/white" />
+
+    <item
+        android:id="@+id/profileFragment"
+        android:title="@string/profile"
+        android:enabled="true"
+        android:icon="@drawable/ic_user"
+        android:menuCategory="secondary"
+        app:cnb_backgroundColor="@color/background"
+        app:cnb_iconColor="@color/white"
+        app:cnb_iconTintMode="src_in"
+        app:cnb_textColor="@color/white" />
+
+</menu>

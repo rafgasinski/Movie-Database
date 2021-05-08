@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/background"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="140dp"
+        android:layout_height="205dp"
+        app:cardElevation="3dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="12dp"
+        android:backgroundTint="@android:color/transparent"
+        app:cardCornerRadius="3dp">
+
+        <ImageView
+            android:id="@+id/poster"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="12dp"
+        android:text=""
+        android:textColor="@color/white" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginStart="2dp">
+
+        <TextView
+            android:id="@+id/score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.01"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/score_stars_back"
+            android:layout_width="55dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center_vertical|start"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="1dp"
+            android:background="@drawable/icon_five_stars"
+            android:backgroundTint="@color/text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.01"
+            app:layout_constraintStart_toEndOf="@id/score"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/accent" />
+
+        <ImageView
+            android:id="@+id/score_stars"
+            android:layout_width="55dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center_vertical|start"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="1dp"
+            android:background="@drawable/bkgd_level"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.01"
+            app:layout_constraintStart_toEndOf="@id/score"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/accent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</LinearLayout>

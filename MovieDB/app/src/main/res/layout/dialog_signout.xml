@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background"
+    android:padding="10dp" >
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/icon_film_reel"
+        android:layout_marginTop="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/the_movie_database"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_below="@id/logo"/>
+
+    <TextView
+        android:id="@+id/information"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Are you sure you want to logout?"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/name"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="45dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/round_button"
+        android:gravity="center"
+        android:layout_below="@id/information"
+        android:text="@string/log_out"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="12dp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="45dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/round_button"
+        android:gravity="center"
+        android:text="@string/cancel"
+        android:layout_below="@id/information"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="12dp" />
+
+
+</RelativeLayout>
