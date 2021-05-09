@@ -34,7 +34,8 @@
     <string name="search_results">Search Results For \"%1$s\"</string>
     <string name="no_search_results">No Search Results For \"%1$s\"</string>
     <string name="recommended_movies">Recommended Movies</string>
-    <string name="search_profile">Search Movies List</string>
+    <string name="search_watchlist">Search In Watchlist</string>
+    <string name="search_watched">Search In Watched</string>
     <string name="empty_string"> </string>
     <string name="no_internet_connection">No Internet Connection</string>
 

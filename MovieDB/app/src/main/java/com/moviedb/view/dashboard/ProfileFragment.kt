@@ -47,13 +47,10 @@ class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
-    lateinit var mAuth : FirebaseAuth
+    private lateinit var mAuth : FirebaseAuth
     var changeProfilePic = false
 
-    private var linearLayoutManager : LinearLayoutManager? = null
-
     private val firebaseStorage = FirebaseStorage.getInstance().reference
-
     private val databaseFirebase = Firebase.database.reference
 
     private var watchedList : ArrayList<FirebaseMovie> = arrayListOf()
@@ -61,7 +58,7 @@ class ProfileFragment : Fragment() {
 
     private var menuItemSearch: MenuItem? = null
     private var searchView: SearchView? = null
-    val searchEditText = searchView?.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
+    private lateinit var searchEditText : EditText
 
     private lateinit var viewModel: ProfileViewModel
     private val adapterProfileMovies: ProfileMovieAdapter by lazy {
@@ -95,8 +92,6 @@ class ProfileFragment : Fragment() {
 
         viewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
 
-        linearLayoutManager = LinearLayoutManager(context)
-
         profilePicReference.downloadUrl.addOnSuccessListener {
             Glide.with(requireContext())
                     .load(it)
@@ -119,6 +114,9 @@ class ProfileFragment : Fragment() {
                 .centerCrop()
                 .into(binding.profileBackground)
         }
+
+        binding.changeProfilePic.animate().setDuration(800).alpha(1f)
+        binding.changeBackgroundPic.animate().setDuration(800).alpha(0.9f)
 
         binding.changeProfilePic.setOnClickListener {
             val intentOpenGallery = Intent()
@@ -165,11 +163,10 @@ class ProfileFragment : Fragment() {
                    }
                }
 
-               val searchEditText = searchView?.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
 
                binding.progressBar.visibility = View.GONE
 
-               if(searchEditText?.text.isNullOrEmpty()){
+               if(searchEditText.text.isNullOrEmpty()){
                    if(binding.tabLayout.selectedTabPosition == 0){
                        adapterProfileMovies.setData(toWatchList)
                    } else {
@@ -193,12 +190,15 @@ class ProfileFragment : Fragment() {
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
 
+
                 if (tab?.position == 0) {
                     adapterProfileMovies.setData(toWatchList)
+                    searchEditText?.setHint(R.string.search_watchlist)
                 } else {
                     adapterProfileMovies.setData(watchedList)
+                    searchEditText?.setHint(R.string.search_watched)
                 }
-                searchEditText?.setText(R.string.empty_string)
+                searchEditText.setText(R.string.empty_string)
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -300,7 +300,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun uploadProfileImageToFirebase(imageUri: Uri) {
-        var fileRef = firebaseStorage.child("users/" + mAuth.currentUser!!.uid + "/profile_pic")
+        val fileRef = firebaseStorage.child("users/" + mAuth.currentUser!!.uid + "/profile_pic")
         fileRef.putFile(imageUri).addOnSuccessListener {
 
             fileRef.downloadUrl.addOnSuccessListener {
@@ -320,7 +320,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun uploadBackgroundImageToFirebase(imageUri: Uri) {
-        var fileRef = firebaseStorage.child("users/" + mAuth.currentUser!!.uid + "/background_pic")
+        val fileRef = firebaseStorage.child("users/" + mAuth.currentUser!!.uid + "/background_pic")
         fileRef.putFile(imageUri).addOnSuccessListener {
 
             fileRef.downloadUrl.addOnSuccessListener {
@@ -347,21 +347,18 @@ class ProfileFragment : Fragment() {
         menuItemSearch = menu.findItem(R.id.itemSearch)
         searchView = menuItemSearch!!.actionView as SearchView
 
-        val searchEditText = searchView?.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
+        searchEditText = searchView?.findViewById(androidx.appcompat.R.id.search_src_text) as EditText
 
-        searchEditText?.setHint(R.string.search_profile)
+        if(binding.tabLayout.selectedTabPosition == 0){
+            searchEditText?.setHint(R.string.search_watchlist)
+        } else {
+            searchEditText?.setHint(R.string.search_watched)
+        }
 
         searchView!!.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(textInput: String?): Boolean {
-
-                    searchView?.clearFocus()
-
-                    if (textInput != null) {
-
-                    }
-
-                    return true
+                    return false
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
@@ -378,7 +375,7 @@ class ProfileFragment : Fragment() {
         return when (item.itemId)
         {
             R.id.logOut -> {
-                var bindingDialog = DialogSignoutBinding.inflate(LayoutInflater.from(context))
+                val bindingDialog = DialogSignoutBinding.inflate(LayoutInflater.from(context))
                 val builder = AlertDialog.Builder(context, R.style.CustomAlertDialog)
                 builder.setView(bindingDialog.root)
 
