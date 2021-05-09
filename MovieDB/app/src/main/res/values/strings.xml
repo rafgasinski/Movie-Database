@@ -29,7 +29,7 @@
     <string name="cancel">Cancel</string>
     <string name="trending_movies_this_week">Trending Movies This Week</string>
     <string name="cast">Cast</string>
-    <string name="trailers">Trailers</string>
+    <string name="videos">Videos</string>
     <string name="search_the_movie_database">Search The Movie Database</string>
     <string name="search_results">Search Results For \"%1$s\"</string>
     <string name="no_search_results">No Search Results For \"%1$s\"</string>
