@@ -22,7 +22,7 @@
                 android:id="@+id/poster"
                 android:backgroundTint="@color/aboveBackground"
                 android:layout_width="match_parent"
-                android:layout_height="235dp">
+                android:layout_height="225dp">
 
                 <com.denzcoskun.imageslider.ImageSlider
                     android:id="@+id/image_slider"

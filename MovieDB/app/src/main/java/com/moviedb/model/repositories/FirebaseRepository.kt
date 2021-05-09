@@ -29,19 +29,30 @@ class FirebaseRepository {
     }
 
     fun addMovie(movie: FirebaseMovie) {
-        getUserAllMovies(currentUser!!.uid).child(movie.id).setValue(movie).addOnSuccessListener {
-            if (!movie.watched) {
-                databaseMessage.value = Event("Added: '${movie.title}' to watchlist")
-            } else {
-                databaseMessage.value = Event("Added '${movie.title}' to watched list")
-            }
-            wasMovieAddedSuccessfully.value = Event(true)
-        }.addOnFailureListener {
-            addingMovieToWatchedList = movie.watched != false
+        getUserAllMovies(currentUser!!.uid).child(movie.id).get().addOnSuccessListener { dataSnapshot ->
+            getUserAllMovies(currentUser!!.uid).child(movie.id).setValue(movie).addOnSuccessListener {
+                if(dataSnapshot.exists()){
+                    if (!movie.watched) {
+                        databaseMessage.value = Event("Moved: '${movie.title}' to watchlist")
+                    } else {
+                        databaseMessage.value = Event("Moved '${movie.title}' to watched")
+                    }
+                } else {
+                    if (!movie.watched) {
+                        databaseMessage.value = Event("Added: '${movie.title}' to watchlist")
+                    } else {
+                        databaseMessage.value = Event("Added '${movie.title}' to watched")
+                    }
+                }
+                wasMovieAddedSuccessfully.value = Event(true)
+            }.addOnFailureListener { exception ->
+                addingMovieToWatchedList = movie.watched != false
 
-            databaseMessage.value = Event("Error: Movie was not added")
-            wasMovieAddedSuccessfully.value = Event(false)
+                databaseMessage.value = Event("Error: $exception")
+                wasMovieAddedSuccessfully.value = Event(false)
+            }
         }
+
     }
 
     fun removeMovie(movieId : String) {

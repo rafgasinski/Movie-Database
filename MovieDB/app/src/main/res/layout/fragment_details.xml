@@ -20,7 +20,7 @@
                 android:id="@+id/backdrop_cardview"
                 android:layout_width="match_parent"
                 android:backgroundTint="@color/aboveBackground"
-                android:layout_height="235dp">
+                android:layout_height="225dp">
 
                 <ImageView
                     android:id="@+id/backdrop"

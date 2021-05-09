@@ -38,8 +38,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_picture"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="95dp"
+                android:layout_height="95dp"
                 android:src="@color/aboveBackground"
                 android:layout_marginStart="20dp"
                 android:layout_gravity="bottom"
@@ -50,7 +50,7 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar_profile"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="95dp"
                 app:layout_collapseMode="pin" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -72,8 +72,9 @@
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="wrap_content"
                 android:background="@color/background"
+                app:tabRippleColor="@color/aboveBackground"
                 app:tabIndicatorColor="@color/accent"
                 app:tabTextColor="@color/textHint"
                 app:tabSelectedTextColor="@color/white" />
@@ -104,17 +105,18 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <ImageButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/change_background_pic"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:baselineAlignBottom="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:src="@drawable/ic_edit"
-        android:background="@null"
-        android:alpha="0.8"
-        android:clickable="true"
+        android:backgroundTint="@android:color/transparent"
+        android:alpha="0"
+        app:pressedTranslationZ="0dp"
+        app:borderWidth="0dp"
         app:layout_anchor="@id/appbar"
         app:layout_anchorGravity="end"
+        app:elevation="0dp"
         android:tint="@color/white" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -122,15 +124,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/accent"
-        app:fabSize="mini"
-        app:rippleColor="@color/accent"
         android:src="@drawable/ic_camera"
+        android:alpha="1"
+        app:fabCustomSize="30dp"
+        app:maxImageSize="20dp"
+        app:rippleColor="@color/circularPlaceholder"
         app:tint="@color/white"
         app:layout_anchor="@id/appbar"
         app:layout_anchorGravity="bottom"
-        android:layout_marginStart="86dp"
-        android:background="@color/accent"
-        android:translationY="-12dp"
-        app:pressedTranslationZ="12dp" />
+        android:layout_marginStart="84dp"
+        android:translationY="-11dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -40,6 +40,7 @@
             android:layout_height="wrap_content"
             app:tabIndicatorColor="@color/accent"
             app:tabTextColor="@color/textHint"
+            app:tabRippleColor="@color/aboveBackground"
             app:tabSelectedTextColor="@color/white"
             app:layout_constraintVertical_bias="0.0"
             app:layout_constraintBottom_toBottomOf="parent"
