@@ -32,8 +32,14 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
+    /**
+     * FirebaseAuth Instance
+     * */
     lateinit var mAuth : FirebaseAuth
 
+    /**
+     * ViewModel and recyclerView adapter
+     * */
     private lateinit var viewModel: SearchViewModel
     private val adapterSearch: SearchAdapter by lazy {
         SearchAdapter()
@@ -73,6 +79,10 @@ class SearchFragment : Fragment() {
         observeViewModelList()
         setList()
 
+        /**
+         * Get last selected movieId to show
+         * recommendations based on it
+         * */
         val sharedPrefMovieDetail: SharedPreferences? = activity?.getSharedPreferences(
                 Constants.SH_LAST_MOVIE_DETAIL_ID_KEY,
                 Constants.PRIVATE_MODE
@@ -87,6 +97,9 @@ class SearchFragment : Fragment() {
             binding.recyclerViewRecommendedFragment.visibility = View.VISIBLE
             binding.recommendedFragmentInfo.visibility = View.VISIBLE
 
+            /**
+             * Get last selected recommended movie recycler position
+             * */
             val sharedPrefRecommendedPosition: SharedPreferences? = activity?.getSharedPreferences(
                     Constants.SH_SEARCH_RECOMMENDED_POSITION_KEY,
                     Constants.PRIVATE_MODE
@@ -94,6 +107,9 @@ class SearchFragment : Fragment() {
 
             val recommendedPosition = sharedPrefRecommendedPosition?.getInt(Constants.SH_SEARCH_RECOMMENDED_POSITION_KEY, 0)
 
+            /**
+             * Scroll to recommendedPosition
+             * */
             if(recommendedPosition != 0 && recommendedPosition != null){
                 binding.recyclerViewRecommendedFragment.alpha = 0f
                 binding.recyclerViewRecommendedFragment.animate().withStartAction{
@@ -107,6 +123,9 @@ class SearchFragment : Fragment() {
             binding.recommendedFragmentInfo.visibility = View.GONE
         }
 
+        /**
+         * Get last search query
+         * */
         val sharedPrefSearchQuery: SharedPreferences? = activity?.getSharedPreferences(
                 Constants.SH_LAST_SEARCHED_QUERY_KEY,
                 Constants.PRIVATE_MODE
@@ -116,8 +135,14 @@ class SearchFragment : Fragment() {
 
         if(!searchQuery.isNullOrEmpty()) {
 
+            /**
+             * Show results based on last query
+             * */
             viewModel.getSearchMovie(searchQuery)
 
+            /**
+             * Get last position in search recyclerView
+             * */
             val sharedPrefSearchPosition: SharedPreferences? = activity?.getSharedPreferences(
                     Constants.SH_SEARCH_POSITION_KEY,
                     Constants.PRIVATE_MODE
@@ -125,6 +150,9 @@ class SearchFragment : Fragment() {
 
             val searchPosition = sharedPrefSearchPosition?.getInt(Constants.SH_SEARCH_POSITION_KEY, 0)
 
+            /**
+             * Scroll to last search position
+             * */
             if(searchPosition != 0 && searchPosition != null){
                 binding.recyclerViewSearchFragment.alpha = 0f
                 binding.recyclerViewSearchFragment.animate().withStartAction{
@@ -135,6 +163,9 @@ class SearchFragment : Fragment() {
 
             }
 
+            /**
+             * Change textView to show information about last query
+             * */
             val resources: Resources = resources
             binding.recyclerViewSearchFragment.visibility = View.VISIBLE
             binding.searchFragmentInfo.visibility = View.VISIBLE
@@ -147,12 +178,18 @@ class SearchFragment : Fragment() {
 
     }
 
+    /**
+     * Observe search list from API, based on last query
+     * */
     private fun observeViewModelList() {
         viewModel.responseSearchList.observe(viewLifecycleOwner, {
             adapterSearch.setDataSearch(it)
 
+            /**
+             * Get last search query from SharedPreferences
+             * */
             val sharedPrefTitle: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_LAST_SEARCHED_QUERY_KEY, Constants.PRIVATE_MODE)
-            var lastQuery = sharedPrefTitle?.getString(Constants.SH_LAST_SEARCHED_QUERY_KEY, "")
+            val lastQuery = sharedPrefTitle?.getString(Constants.SH_LAST_SEARCHED_QUERY_KEY, "")
 
             if(adapterSearch.list.isNullOrEmpty() && !lastQuery.isNullOrEmpty()){
                 binding.searchFragmentInfo.text = resources.getString(R.string.no_search_results, lastQuery)
@@ -166,12 +203,19 @@ class SearchFragment : Fragment() {
         })
     }
 
+    /**
+     * Set list in adapter and override onClickListener
+     * */
     private fun setList() {
         binding.recyclerViewRecommendedFragment.setHasFixedSize(true)
         binding.recyclerViewRecommendedFragment.adapter = adapterRecommended
         adapterRecommended.onClickItemSearch = object : OnClickItemSearch {
             override fun onClick(searchMovie: SearchMovie) {
 
+                /**
+                 * Save selected movie position in recycler, title and id in SharedPreferences,
+                 * navigate to movie details fragment
+                 * */
                 val sharedPrefRecommendedPosition: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_SEARCH_RECOMMENDED_POSITION_KEY, Constants.PRIVATE_MODE)
                 sharedPrefRecommendedPosition?.edit()?.putInt(Constants.SH_SEARCH_RECOMMENDED_POSITION_KEY, adapterRecommended.list.indexOf(searchMovie))?.clear()?.apply()
 
@@ -189,6 +233,10 @@ class SearchFragment : Fragment() {
         adapterSearch.onClickItemSearch = object : OnClickItemSearch {
             override fun onClick(searchMovie: SearchMovie) {
 
+                /**
+                 * Save selected movie position in recycler, title and id in SharedPreferences,
+                 * navigate to movie details fragment
+                 * */
                 val sharedPrefRecommendedPosition: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_SEARCH_POSITION_KEY, Constants.PRIVATE_MODE)
                 sharedPrefRecommendedPosition?.edit()?.putInt(Constants.SH_SEARCH_POSITION_KEY, adapterSearch.list.indexOf(searchMovie))?.clear()?.apply()
 
@@ -203,6 +251,9 @@ class SearchFragment : Fragment() {
     }
 
 
+    /**
+     * Override menu options
+     * */
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_toolbar, menu)
@@ -226,6 +277,10 @@ class SearchFragment : Fragment() {
                         if (!textInput.isNullOrEmpty()) {
                             viewModel.getSearchMovie(textInput)
 
+                            /**
+                             * Show recyclerView, if already visible
+                             * scroll to beginning
+                             * */
                             if (binding.recyclerViewSearchFragment.visibility != View.VISIBLE) {
                                 binding.recyclerViewSearchFragment.visibility = View.VISIBLE
 
@@ -240,6 +295,9 @@ class SearchFragment : Fragment() {
                                 binding.recyclerViewSearchFragment.smoothScrollToPosition(0)
                             }
 
+                            /**
+                             * Update textView and save query to SharedPreferences
+                             * */
                             val resources: Resources = resources
                             binding.searchFragmentInfo.text = resources.getString(R.string.search_results, textInput)
 
@@ -256,19 +314,20 @@ class SearchFragment : Fragment() {
                 object : MenuItem.OnActionExpandListener {
                     override fun onMenuItemActionExpand(p0: MenuItem?): Boolean = true
 
-                    override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
-                        return true
-                    }
+                    override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean = true
                 }
         )
     }
 
+    /**
+     * Logout method
+     * */
     override fun onOptionsItemSelected(item: MenuItem): Boolean
     {
         return when (item.itemId)
         {
             R.id.logOut -> {
-                var bindingDialog = DialogSignoutBinding.inflate(LayoutInflater.from(context))
+                val bindingDialog = DialogSignoutBinding.inflate(LayoutInflater.from(context))
                 val builder = AlertDialog.Builder(context, R.style.CustomAlertDialog)
                 builder.setView(bindingDialog.root)
 
@@ -278,7 +337,7 @@ class SearchFragment : Fragment() {
                     mAuth.signOut()
                     mAlertDialog.dismiss()
 
-                    var activity = activity as DashboardActivity
+                    val activity = activity as DashboardActivity
                     activity.removeSharedPreferences()
 
                     val intent = Intent(requireContext(), LoginActivity::class.java)

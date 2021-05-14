@@ -27,23 +27,6 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDashboardBinding
     lateinit var mAuth : FirebaseAuth
 
-    var broadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            var isConnected  = intent?.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false)
-
-            if(isConnected!!){
-                Log.d("lol", "wifiOff")
-            }
-        }
-
-    }
-
-    override fun onStart() {
-        super.onStart()
-        var intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        registerReceiver(broadcastReceiver, intentFilter)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -57,6 +40,9 @@ class DashboardActivity : AppCompatActivity() {
 
         mAuth = FirebaseAuth.getInstance()
 
+        /**
+         * Navigation setup
+         * */
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
@@ -97,11 +83,13 @@ class DashboardActivity : AppCompatActivity() {
 
         NavigationUI.setupActionBarWithNavController(this, navController)
 
+        /**
+         * Prevent user from browsing app if no internet connection,
+         * switch to main activity
+         * */
         val networkConnection = NetworkConnection(applicationContext)
         networkConnection.observe(this, Observer { connected ->
             if(!connected){
-
-
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
@@ -110,6 +98,10 @@ class DashboardActivity : AppCompatActivity() {
         })
     }
 
+    /**
+     * Remove selected SharedPreferences
+     * on users logout
+     * */
     fun removeSharedPreferences() {
 
         this.getSharedPreferences(Constants.SH_LAST_MOVIE_DETAIL_ID_KEY, Constants.PRIVATE_MODE)
@@ -136,6 +128,9 @@ class DashboardActivity : AppCompatActivity() {
     }
 
 
+    /**
+     * Remove movie data cache
+     * */
     override fun onDestroy() {
         super.onDestroy()
         this.cacheDir.deleteRecursively()
@@ -148,6 +143,9 @@ class DashboardActivity : AppCompatActivity() {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
+    /**
+     * Navigation and ChipNavigationBar integrity
+     * */
     private fun ChipNavigationBar.onNavDestinationSelected(
             itemId: Int,
             navController: NavController

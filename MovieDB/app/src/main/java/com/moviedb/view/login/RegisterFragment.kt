@@ -28,6 +28,9 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        /**
+         * Register button listener, show Toasts with exceptions
+         * */
         binding.registerButton.setOnClickListener{
             when{
                 TextUtils.isEmpty(binding.registerEmail.text.toString().trim(){

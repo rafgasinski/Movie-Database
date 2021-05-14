@@ -24,10 +24,17 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        /**
+         * Check network connection
+         * */
         val networkConnection = NetworkConnection(applicationContext)
         networkConnection.observe(this, Observer { connected ->
 
             if(connected) {
+                /**
+                 * If network is online go to login or dashboard activity
+                 * based on if Firebase user isn't null
+                 * */
                 binding.logo.setImageResource(R.drawable.icon_film_reel)
                 binding.networkInfo.alpha = 0f
 
@@ -51,6 +58,9 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             } else {
+                /**
+                 * Show information about no internet connection
+                 * */
                 binding.logo.setImageResource(R.drawable.icon_no_network)
                 binding.logo.alpha = 0f
                 binding.logo.animate().setDuration(1000).alpha(1f)

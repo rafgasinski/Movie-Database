@@ -38,6 +38,9 @@ class LoginFragment : Fragment() {
 
         binding.loginButton.background.level = 4000
 
+        /**
+         * Login button listener, show Toasts with exceptions
+         * */
         binding.loginButton.setOnClickListener {
             when {
                 TextUtils.isEmpty(binding.loginEmail.text.toString().trim() {
@@ -61,7 +64,6 @@ class LoginFragment : Fragment() {
                     FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             binding.progressBar.visibility = View.INVISIBLE
-                            val firebaseUser: FirebaseUser = task.result!!.user!!
 
                             val intent = Intent(requireContext(), DashboardActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -77,9 +79,12 @@ class LoginFragment : Fragment() {
             }
         }
 
+        /**
+         * Build forgotPassword dialog
+         * */
         binding.forgotPassword.setOnClickListener {
 
-            var bindingDialog = DialogForgotPasswordBinding.inflate(LayoutInflater.from(context))
+            val bindingDialog = DialogForgotPasswordBinding.inflate(LayoutInflater.from(context))
             val builder = AlertDialog.Builder(context, R.style.CustomAlertDialog)
             builder.setView(bindingDialog.root)
 

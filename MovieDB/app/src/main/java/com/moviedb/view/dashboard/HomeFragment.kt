@@ -38,9 +38,16 @@ open class HomeFragment : Fragment() {
 
     private lateinit var toolbar : androidx.appcompat.widget.Toolbar
 
+    /**
+     * FirebaseAuth Instance
+     * */
     lateinit var mAuth : FirebaseAuth
 
     private var genresList : List<Genre> = listOf()
+
+    /**
+     * ViewModel and recyclerView adapter
+     * */
     private lateinit var viewModel: HomeViewModel
     private val adapterDiscoverGenre: HomeMovieAdapter by lazy {
         HomeMovieAdapter()
@@ -60,6 +67,10 @@ open class HomeFragment : Fragment() {
         toolbar = activity?.findViewById(R.id.toolbar)!!
         toolbar.setNavigationIcon(R.drawable.ic_search)
 
+        /**
+         * Remove recommended recycler movie position
+         * and search position from SharedPreferences
+         * */
         val sharedPrefRecommended: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_SEARCH_RECOMMENDED_POSITION_KEY, Constants.PRIVATE_MODE)
         sharedPrefRecommended?.edit()?.remove(Constants.SH_SEARCH_RECOMMENDED_POSITION_KEY)?.clear()?.apply()
 
@@ -78,9 +89,16 @@ open class HomeFragment : Fragment() {
 
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
 
+
+        /**
+         * Get last chosen position in discover recyclerView
+         * */
         val sharedPrefDiscoverPosition: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_DISCOVER_RECYCLER_POSITION_KEY, Constants.PRIVATE_MODE)
         val lastRecyclerDiscoverPosition = sharedPrefDiscoverPosition?.getInt(Constants.SH_DISCOVER_RECYCLER_POSITION_KEY, 0)
 
+        /**
+         * Scroll to last chosen position in discover recyclerView
+         * */
         if(lastRecyclerDiscoverPosition != 0 && lastRecyclerDiscoverPosition != null){
             binding.selectedGenreRecyclerView.alpha = 0f
             binding.selectedGenreRecyclerView.animate().withStartAction{
@@ -90,9 +108,15 @@ open class HomeFragment : Fragment() {
             }.setDuration(1200).alpha(1f)
         }
 
+        /**
+         * Get last selected genre tab
+         * */
         val sharedPrefSelectedTab: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_DISCOVER_SELECTED_TAB_KEY, Constants.PRIVATE_MODE)
         val lastSelectedTab = sharedPrefSelectedTab?.getInt(Constants.SH_DISCOVER_SELECTED_TAB_KEY, 0)
 
+        /**
+         * Scroll to last selected genre tab and select it
+         * */
         if(lastSelectedTab != 0 && lastSelectedTab != null){
 
             binding.tabLayout.scrollX = binding.tabLayout.width
@@ -115,15 +139,24 @@ open class HomeFragment : Fragment() {
         binding.tabLayout.isSmoothScrollingEnabled = true;
         binding.tabLayout.tabGravity = TabLayout.GRAVITY_START
 
+        /**
+         * TabLayout listener
+         * */
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
 
+                /**
+                 * Save selected tab position in SharedPreferences
+                 * */
                 val sharedPrefSelectedTab: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_DISCOVER_SELECTED_TAB_KEY, Constants.PRIVATE_MODE)
                 tab?.let { sharedPrefSelectedTab?.edit()?.putInt(Constants.SH_DISCOVER_SELECTED_TAB_KEY, it.position)?.apply() }
 
                 activity?.getSharedPreferences(Constants.SH_DISCOVER_RECYCLER_POSITION_KEY, Constants.PRIVATE_MODE)
                     ?.edit()?.putInt(Constants.SH_DISCOVER_RECYCLER_POSITION_KEY, 0)?.apply()
 
+                /**
+                 * Change recycler item list based on selected genre
+                 * */
                 if (tab != null) {
                     viewModel.getDiscoverGenre(genresList[tab.position].id)
                     binding.selectedGenreRecyclerView.smoothScrollToPosition(0)
@@ -143,6 +176,10 @@ open class HomeFragment : Fragment() {
         viewModel.getTrending()
     }
 
+    /**
+     * Observe movies to discover list from API,
+     * load them to imageSlider
+     * */
     private fun observeDiscover() {
         viewModel.discoverMoviesResponseList.observe(viewLifecycleOwner, {
             loadImageList(it)
@@ -150,12 +187,18 @@ open class HomeFragment : Fragment() {
         })
     }
 
+    /**
+     * Observe trending movies list from API
+     * */
     private fun observeTrending() {
         viewModel.homeResponseList.observe(viewLifecycleOwner, {
             adapterTrending.setDataHomeMovies(it)
         })
     }
 
+    /**
+     * Observe genre list from API and add them to tabLayout
+     * */
     private fun observeGenresList() {
         viewModel.genreResponseList.observe(viewLifecycleOwner, {
             genresList = it
@@ -166,12 +209,18 @@ open class HomeFragment : Fragment() {
 
     }
 
+    /**
+     * Observe movies to discover (genreVariant) list from API
+     * */
     private fun observeDiscoverGenre() {
         viewModel.discoverGenreResponseList.observe(viewLifecycleOwner, {
             adapterDiscoverGenre.setDataHomeMovies(it)
         })
     }
 
+    /**
+     * Set list in adapter and override onClickListener
+     * */
     private fun setListTrending() {
         binding.trendingRecyclerView.setHasFixedSize(true)
         binding.trendingRecyclerView.adapter = adapterTrending
@@ -179,6 +228,10 @@ open class HomeFragment : Fragment() {
             override fun onClick(homeMovie: HomeMovie) {
                 val action = HomeFragmentDirections.actionHomeFragmentToDetailsFragment(homeMovie.id)
 
+                /**
+                 * Save movie title and id in SharedPreferences,
+                 * navigate to movie details fragment
+                 * */
                 val sharedPrefTitle: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_LAST_MOVIE_TITLE_KEY, Constants.PRIVATE_MODE)
                 sharedPrefTitle?.edit()?.putString(Constants.SH_LAST_MOVIE_TITLE_KEY, homeMovie.title)?.clear()?.apply()
 
@@ -190,6 +243,9 @@ open class HomeFragment : Fragment() {
         }
     }
 
+    /**
+     * Set list in adapter and override onClickListener
+     * */
     private fun setListDiscoverGenre() {
         binding.selectedGenreRecyclerView.setHasFixedSize(true)
         binding.selectedGenreRecyclerView.adapter = adapterDiscoverGenre
@@ -197,6 +253,10 @@ open class HomeFragment : Fragment() {
             override fun onClick(homeMovie: HomeMovie) {
                 val action = HomeFragmentDirections.actionHomeFragmentToDetailsFragment(homeMovie.id)
 
+                /**
+                 * Save selected movie position in recycler, title and id in SharedPreferences,
+                 * navigate to movie details fragment
+                 * */
                 activity?.getSharedPreferences(Constants.SH_DISCOVER_RECYCLER_POSITION_KEY, Constants.PRIVATE_MODE)
                     ?.edit()?.putInt(Constants.SH_DISCOVER_RECYCLER_POSITION_KEY, adapterDiscoverGenre.list.indexOf(homeMovie))?.apply()
 
@@ -212,6 +272,9 @@ open class HomeFragment : Fragment() {
     }
 
 
+    /**
+     * Load images into ImageSlider
+     * */
     private fun loadImageList(data: ArrayList<DiscoverMovies>) {
 
         val imageList = ArrayList<SlideModel>()
@@ -232,10 +295,17 @@ open class HomeFragment : Fragment() {
         })
     }
 
+    /**
+     * Image Slider onClickListener override
+     * */
     private fun imageSliderToDetailMovie(data: ArrayList<DiscoverMovies>) {
         binding.imageSlider.setItemClickListener(object : ItemClickListener {
             override fun onItemSelected(position: Int) {
 
+                /**
+                 * Save movie title and id in SharedPreferences,
+                 * navigate to movie details fragment
+                 * */
                 val sharedPrefTitle: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_LAST_MOVIE_TITLE_KEY, Constants.PRIVATE_MODE)
                 sharedPrefTitle?.edit()?.putString(Constants.SH_LAST_MOVIE_TITLE_KEY, data[position].title)?.clear()?.apply()
 
@@ -251,17 +321,23 @@ open class HomeFragment : Fragment() {
         })
     }
 
+    /**
+     * Override menu options
+     * */
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_toolbar_discover, menu)
     }
 
+    /**
+     * Logout method
+     * */
     override fun onOptionsItemSelected(item: MenuItem): Boolean
     {
         return when (item.itemId)
         {
             R.id.logOut -> {
-                var bindingDialog = DialogSignoutBinding.inflate(LayoutInflater.from(context))
+                val bindingDialog = DialogSignoutBinding.inflate(LayoutInflater.from(context))
                 val builder = AlertDialog.Builder(context, R.style.CustomAlertDialog)
                 builder.setView(bindingDialog.root)
 
@@ -271,7 +347,7 @@ open class HomeFragment : Fragment() {
                     mAuth.signOut()
                     mAlertDialog.dismiss()
 
-                    var activity = activity as DashboardActivity
+                    val activity = activity as DashboardActivity
                     activity.removeSharedPreferences()
 
                     val intent = Intent(requireContext(), LoginActivity::class.java)

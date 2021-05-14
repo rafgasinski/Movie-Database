@@ -28,7 +28,7 @@ class CastAdapter(var castTextInfo: TextView) : RecyclerView.Adapter<CastAdapter
                     .placeholder(R.drawable.placeholder_transparent)
                     .into(castPhoto)
 
-            var fullName = cast.name.split(" ")
+            val fullName = cast.name.split(" ")
 
             when(fullName.count()){
                 1 -> castFirstname.text = cast.name

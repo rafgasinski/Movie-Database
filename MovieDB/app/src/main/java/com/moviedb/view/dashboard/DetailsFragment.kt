@@ -48,12 +48,21 @@ class DetailsFragment : Fragment() {
     private lateinit var firebaseMovie : FirebaseMovie
     val sdf = SimpleDateFormat("yyyy/M/d HH:mm:ss")
 
+    /**
+     * Navigation args
+     * */
     private val args : DetailsFragmentArgs by navArgs()
 
     private lateinit var toolbar : androidx.appcompat.widget.Toolbar
 
+    /**
+     * FirebaseAuth Instance
+     * */
     private lateinit var mAuth : FirebaseAuth
 
+    /**
+     * ViewModel and recyclerView adapter
+     * */
     private lateinit var viewModel: DetailViewModel
     private val adapterCast: CastAdapter by lazy {
         CastAdapter(binding.castInfo)
@@ -92,11 +101,18 @@ class DetailsFragment : Fragment() {
 
         trailerSnapHelper = LinearSnapHelper()
 
+        /**
+         * Get movie data from API
+         * */
         viewModel.getDetails(movieId)
         viewModel.getCast(movieId)
 
         viewModel.firebaseRepository.getMovie(movieId)
 
+        /**
+         * Check if movie is in user's records,
+         * if so change corresponding checkbox
+         * */
         viewModel.firebaseRepository.wasMovieWatched.observe(viewLifecycleOwner, Observer { event ->
             event?.getContentIfNotHandledOrReturnNull()?.let {
                 if(it == "false"){
@@ -107,12 +123,18 @@ class DetailsFragment : Fragment() {
             }
         })
 
+        /**
+         * Observe Event from FirebaseRepository, to show Toast with it
+         * */
         viewModel.firebaseRepository.databaseMessage.observe(viewLifecycleOwner, Observer { event ->
             event?.getContentIfNotHandledOrReturnNull()?.let {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             }
         })
 
+        /**
+         * Change checkbox if movie was added to Firebase
+         * */
         viewModel.firebaseRepository.wasMovieAddedSuccessfully.observe(viewLifecycleOwner, Observer { event ->
             event?.getContentIfNotHandledOrReturnNull()?.let {
                 if(!it){
@@ -125,6 +147,10 @@ class DetailsFragment : Fragment() {
             }
         })
 
+        /**
+         * Checkbox listeners, adding or removing movies
+         * in Firebase Realtime Database
+         * */
         binding.toWatchCheckbox.setOnClickListener {
             if(binding.toWatchCheckbox.isChecked){
                 binding.watchedCheckbox.isChecked = false
@@ -154,6 +180,10 @@ class DetailsFragment : Fragment() {
         setListCastGenresTrailers()
     }
 
+    /**
+     * Set list in adapter and override onClickListener
+     * to start Intent with Youtube link
+     * */
     private fun setListCastGenresTrailers(){
         binding.recyclerViewCast.setHasFixedSize(true)
         binding.recyclerViewCast.adapter = adapterCast
@@ -174,12 +204,18 @@ class DetailsFragment : Fragment() {
         }
     }
 
+    /**
+     * Observe castList
+     * */
     private fun observeCast(){
         viewModel.castResponseList.observe(viewLifecycleOwner, {
             adapterCast.setDataCast(it)
         })
     }
 
+    /**
+     * Observe movieDetails
+     * */
     private fun observeDetailMovie(){
         viewModel.detailResponse.observe(viewLifecycleOwner, {
             if (it.backdropPath == null) {
@@ -203,6 +239,9 @@ class DetailsFragment : Fragment() {
         })
     }
 
+    /**
+     * Load backdrop with given link from API
+     * */
     private fun loadBackdrop(backdropPath: String) {
         Glide.with(this)
                 .load("$BACKDROP_IMAGE${backdropPath}")
@@ -213,7 +252,7 @@ class DetailsFragment : Fragment() {
                     }
 
                     override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                        var animation = AnimationUtils.loadAnimation(binding.backdrop.context, R.anim.fadein)
+                        val animation = AnimationUtils.loadAnimation(binding.backdrop.context, R.anim.fadein)
                         binding.backdrop.startAnimation(animation)
                         return false
                     }
@@ -223,6 +262,9 @@ class DetailsFragment : Fragment() {
                 .into(binding.backdrop)
     }
 
+    /**
+     * Load movie details
+     * */
     @SuppressLint("Range")
     private fun loadMovieDetails(detailResponse: DetailResponse) {
         if(detailResponse.duration != 0){

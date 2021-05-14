@@ -15,6 +15,9 @@ class HomeViewModel : ViewModel() {
 
     private val apiRepository = ApiRepository()
 
+    /**
+     * Data response lists
+     * */
     private val _trendingResponseList = MutableLiveData<ArrayList<HomeMovie>>()
     val homeResponseList: LiveData<ArrayList<HomeMovie>> = _trendingResponseList
 
@@ -27,6 +30,9 @@ class HomeViewModel : ViewModel() {
     private val _genreResponseList = MutableLiveData<List<Genre>>()
     val genreResponseList: LiveData<List<Genre>> = _genreResponseList
 
+    /**
+     * Functions to get adequate data from API
+     * */
     fun getTrending() {
         viewModelScope.launch {
             val response = apiRepository.getTrending()

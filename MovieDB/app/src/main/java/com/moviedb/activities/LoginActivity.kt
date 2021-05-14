@@ -42,6 +42,9 @@ class LoginActivity : AppCompatActivity() {
 
         window.statusBarColor = ContextCompat.getColor(this, R.color.accent)
 
+        /**
+         * TabLayout and viewPager setup
+         * */
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("@string/login"))
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("@string/signup"))
         binding.tabLayout.tabGravity = TabLayout.GRAVITY_FILL
@@ -68,7 +71,10 @@ class LoginActivity : AppCompatActivity() {
             signIn()
         }
 
-        var snackBar = Snackbar.make(binding.constraintLayout, "No Internet Connection", Snackbar.LENGTH_INDEFINITE)
+        /**
+         * Prepare snackBar about no internet connection
+         * */
+        val snackBar = Snackbar.make(binding.constraintLayout, "No Internet Connection", Snackbar.LENGTH_INDEFINITE)
             .setAction("Wifi Settings") {
                 startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
             }
@@ -79,6 +85,9 @@ class LoginActivity : AppCompatActivity() {
         val tv = sbView.findViewById(com.google.android.material.R.id.snackbar_text) as TextView
         tv.setTextColor(ContextCompat.getColor(this, R.color.white))
 
+        /**
+         * Show or dismiss snackBar based on internet connection
+         * */
         val networkConnection = NetworkConnection(applicationContext)
         networkConnection.observe(this, Observer { connected ->
             if (!connected) {
@@ -90,8 +99,9 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-
-
+    /**
+     * GoogleSignIn method result
+     * */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -114,6 +124,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Login with google account
+     * */
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         mAuth.signInWithCredential(credential)

@@ -17,6 +17,9 @@ class DetailViewModel : ViewModel() {
     private val apiRepository = ApiRepository()
     val firebaseRepository = FirebaseRepository()
 
+    /**
+     * Data response lists
+     * */
     private val _detailResponse = MutableLiveData<DetailResponse>()
     val detailResponse: LiveData<DetailResponse> = _detailResponse
 
@@ -25,6 +28,9 @@ class DetailViewModel : ViewModel() {
 
     lateinit var videoResult: MovieVideosResponse
 
+    /**
+     * Functions to get adequate data from API
+     * */
     fun getDetails(movieId : String) {
         viewModelScope.launch {
             val response = apiRepository.getDetailMovie(movieId)

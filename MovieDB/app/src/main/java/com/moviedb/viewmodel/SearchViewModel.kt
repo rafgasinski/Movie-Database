@@ -13,12 +13,18 @@ class SearchViewModel : ViewModel() {
 
     private val apiRepository = ApiRepository()
 
+    /**
+     * Data response lists
+     * */
     private val _responseSearchList = MutableLiveData<ArrayList<SearchMovie>>()
     val responseSearchList: LiveData<ArrayList<SearchMovie>> = _responseSearchList
 
     private val _responseRecommendedList = MutableLiveData<ArrayList<SearchMovie>>()
     val responseRecommendedList: LiveData<ArrayList<SearchMovie>> = _responseRecommendedList
 
+    /**
+     * Functions to get adequate data from API
+     * */
     fun getSearchMovie(query : String) {
         viewModelScope.launch {
             val response = apiRepository.getSearchMovie(query)

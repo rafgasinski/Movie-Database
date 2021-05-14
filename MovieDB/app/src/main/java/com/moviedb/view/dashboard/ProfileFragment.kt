@@ -47,30 +47,45 @@ class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
+    /**
+     * FirebaseAuth Instance
+     * */
     private lateinit var mAuth : FirebaseAuth
     var changeProfilePic = false
 
+    /**
+     * Firebase variables
+     * */
     private val firebaseStorage = FirebaseStorage.getInstance().reference
     private val databaseFirebase = Firebase.database.reference
 
     private var watchedList : ArrayList<FirebaseMovie> = arrayListOf()
     private var toWatchList : ArrayList<FirebaseMovie> = arrayListOf()
 
+    /**
+     * Menu items
+     * */
     private var menuItemSearch: MenuItem? = null
     private var searchView: SearchView? = null
     private lateinit var searchEditText : EditText
 
+    /**
+     * ViewModel and recyclerView adapter
+     * */
     private lateinit var viewModel: ProfileViewModel
     private val adapterProfileMovies: ProfileMovieAdapter by lazy {
         ProfileMovieAdapter(viewModel)
     }
+
+    private val backdropRequestCode = 2000
+    private val profilePictureReqeustCode = 1000
 
     private lateinit var toolbar : androidx.appcompat.widget.Toolbar
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         mAuth = FirebaseAuth.getInstance()
 
@@ -87,11 +102,18 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        /**
+         * Reference to firebase storage user's folders
+         * */
         val profilePicReference = firebaseStorage.child("users/" + mAuth.currentUser!!.uid + "/profile_pic")
         val backgroundPicReference = firebaseStorage.child("users/" + mAuth.currentUser!!.uid + "/background_pic")
 
         viewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
 
+        /**
+         * Load user's profile picture from Firebase or
+         * from his login account (e.g Google)
+         * */
         profilePicReference.downloadUrl.addOnSuccessListener {
             Glide.with(requireContext())
                     .load(it)
@@ -107,6 +129,9 @@ class ProfileFragment : Fragment() {
 
         }
 
+        /**
+         * Load user's backdrop picture from Firebase
+         * */
         backgroundPicReference.downloadUrl.addOnSuccessListener {
             Glide.with(requireContext())
                 .load(it)
@@ -115,33 +140,48 @@ class ProfileFragment : Fragment() {
                 .into(binding.profileBackground)
         }
 
+        /**
+         * Animate pic changes
+         * */
         binding.changeProfilePic.animate().setDuration(800).alpha(1f)
         binding.changeBackgroundPic.animate().setDuration(800).alpha(0.9f)
 
+        /**
+         * OnClickListeners for changing both pictures, starting intent
+         * */
         binding.changeProfilePic.setOnClickListener {
             val intentOpenGallery = Intent()
             intentOpenGallery.action = Intent.ACTION_GET_CONTENT
             intentOpenGallery.type = "image/*"
-            startActivityForResult(intentOpenGallery, 1000)
+            startActivityForResult(intentOpenGallery, profilePictureReqeustCode)
         }
 
         binding.changeBackgroundPic.setOnClickListener {
             val intentOpenGallery = Intent()
             intentOpenGallery.action = Intent.ACTION_GET_CONTENT
             intentOpenGallery.type = "image/*"
-            startActivityForResult(intentOpenGallery, 2000)
+            startActivityForResult(intentOpenGallery, backdropRequestCode)
         }
 
+        /**
+         * Adding tabs
+         * */
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Watchlist"))
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Watched"))
         binding.tabLayout.tabGravity = TabLayout.GRAVITY_FILL
 
+        /**
+         * Observe Event from FirebaseRepository, to show Toast with it
+         * */
         viewModel.firebaseRepository.databaseMessage.observe(viewLifecycleOwner, Observer { event ->
             event?.getContentIfNotHandledOrReturnNull()?.let {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             }
         })
 
+        /**
+         * Get movie data from Firebase Realtime Database
+         * */
        val getAllMovies = object : ValueEventListener {
            override fun onDataChange(snapshot: DataSnapshot) {
                binding.progressBar.visibility = View.VISIBLE
@@ -183,20 +223,27 @@ class ProfileFragment : Fragment() {
 
        }
 
+        /**
+         * Listen to changes in user's movie records
+         * */
         databaseFirebase.child(mAuth.currentUser!!.uid).addValueEventListener(getAllMovies)
         observeList()
         setListMovies()
 
+        /**
+         * TabLayout, change list based on selected tab,
+         * clear searchView text
+         * */
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
 
 
                 if (tab?.position == 0) {
                     adapterProfileMovies.setData(toWatchList)
-                    searchEditText?.setHint(R.string.search_watchlist)
+                    searchEditText.setHint(R.string.search_watchlist)
                 } else {
                     adapterProfileMovies.setData(watchedList)
-                    searchEditText?.setHint(R.string.search_watched)
+                    searchEditText.setHint(R.string.search_watched)
                 }
                 searchEditText.setText(R.string.empty_string)
             }
@@ -214,6 +261,9 @@ class ProfileFragment : Fragment() {
     override fun onPause() {
         super.onPause()
 
+        /**
+         * Save last selected tab in sharedPreferences
+         * */
         val sharedPrefSelectedTab: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_PROFILE_SELECTED_TAB_KEY, Constants.PRIVATE_MODE)
         sharedPrefSelectedTab?.edit()?.putInt(Constants.SH_PROFILE_SELECTED_TAB_KEY, binding.tabLayout.selectedTabPosition)?.clear()?.apply()
 
@@ -222,10 +272,16 @@ class ProfileFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+        /**
+         * Get last selected tab from sharedPreferences
+         * */
         val sharedPrefSelectedTab: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_PROFILE_SELECTED_TAB_KEY, Constants.PRIVATE_MODE)
         val lastSelectedTab = sharedPrefSelectedTab?.getInt(Constants.SH_PROFILE_SELECTED_TAB_KEY, 0)
 
-        if(lastSelectedTab != 0 && lastSelectedTab != null){
+        /**
+         * Switch to selected tab from sharedPreferences
+         * */
+        if(lastSelectedTab==1){
 
             binding.tabLayout.scrollX = binding.tabLayout.width
 
@@ -245,10 +301,16 @@ class ProfileFragment : Fragment() {
         })
     }
 
+    /**
+     * Intent results
+     * */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode == 1000 && resultCode == RESULT_OK && data != null){
+        /**
+         * Start CropImage activity for profile picture
+         * */
+        if(requestCode == profilePictureReqeustCode && resultCode == RESULT_OK && data != null){
             changeProfilePic = true
             CropImage.activity(data.data)
                 .setGuidelines(CropImageView.Guidelines.ON)
@@ -256,7 +318,10 @@ class ProfileFragment : Fragment() {
                 .start(context as Activity, this)
         }
 
-        if(requestCode == 2000 && resultCode == RESULT_OK && data != null){
+        /**
+         * Start CropImage activity for backdrop picture
+         * */
+        if(requestCode == backdropRequestCode && resultCode == RESULT_OK && data != null){
             changeProfilePic = false
             CropImage.activity(data.data)
                 .setGuidelines(CropImageView.Guidelines.ON)
@@ -264,6 +329,9 @@ class ProfileFragment : Fragment() {
                 .start(context as Activity, this)
         }
 
+        /**
+         * Upload picture to Firebase Storage and change it in app
+         * */
         if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
 
             val result = CropImage.getActivityResult(data)
@@ -281,6 +349,9 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    /**
+     * Set list in adapter and override onClickListener
+     * */
     private fun setListMovies() {
         binding.recyclerViewProfile.setHasFixedSize(true)
         binding.recyclerViewProfile.adapter = adapterProfileMovies
@@ -299,6 +370,9 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    /**
+     * Upload profile picture to Firebase
+     * */
     private fun uploadProfileImageToFirebase(imageUri: Uri) {
         val fileRef = firebaseStorage.child("users/" + mAuth.currentUser!!.uid + "/profile_pic")
         fileRef.putFile(imageUri).addOnSuccessListener {
@@ -319,6 +393,9 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    /**
+     * Upload backdrop picture to Firebase
+     * */
     private fun uploadBackgroundImageToFirebase(imageUri: Uri) {
         val fileRef = firebaseStorage.child("users/" + mAuth.currentUser!!.uid + "/background_pic")
         fileRef.putFile(imageUri).addOnSuccessListener {
@@ -340,6 +417,9 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    /**
+     * Override menu options
+     * */
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_toolbar, menu)
@@ -370,6 +450,9 @@ class ProfileFragment : Fragment() {
         )
     }
 
+    /**
+     * Logout method
+     * */
     override fun onOptionsItemSelected(item: MenuItem): Boolean
     {
         return when (item.itemId)
@@ -385,7 +468,7 @@ class ProfileFragment : Fragment() {
                     mAuth.signOut()
                     mAlertDialog.dismiss()
 
-                    var activity = activity as DashboardActivity
+                    val activity = activity as DashboardActivity
                     activity.removeSharedPreferences()
 
                     val intent = Intent(requireContext(), LoginActivity::class.java)
