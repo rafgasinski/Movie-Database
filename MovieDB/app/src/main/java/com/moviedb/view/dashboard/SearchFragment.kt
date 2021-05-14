@@ -218,8 +218,12 @@ class SearchFragment : Fragment() {
                     override fun onQueryTextSubmit(textInput: String?): Boolean {
 
                         searchView?.clearFocus()
+                        return true
+                    }
 
-                        if (textInput != null) {
+                    override fun onQueryTextChange(textInput: String?): Boolean {
+
+                        if (!textInput.isNullOrEmpty()) {
                             viewModel.getSearchMovie(textInput)
 
                             if (binding.recyclerViewSearchFragment.visibility != View.VISIBLE) {
@@ -229,6 +233,9 @@ class SearchFragment : Fragment() {
 
                                 binding.recyclerViewSearchFragment.alpha = 0f
                                 binding.recyclerViewSearchFragment.animate().setDuration(600).alpha(1f)
+
+                                binding.searchFragmentInfo.alpha = 0f
+                                binding.searchFragmentInfo.animate().setDuration(600).alpha(1f)
                             } else {
                                 binding.recyclerViewSearchFragment.smoothScrollToPosition(0)
                             }
@@ -236,17 +243,12 @@ class SearchFragment : Fragment() {
                             val resources: Resources = resources
                             binding.searchFragmentInfo.text = resources.getString(R.string.search_results, textInput)
 
-                            binding.searchFragmentInfo.alpha = 0f
-                            binding.searchFragmentInfo.animate().setDuration(600).alpha(1f)
-
                             val sharedPrefTitle: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_LAST_SEARCHED_QUERY_KEY, Constants.PRIVATE_MODE)
                             sharedPrefTitle?.edit()?.putString(Constants.SH_LAST_SEARCHED_QUERY_KEY, textInput)?.clear()?.apply()
                         }
 
                         return true
                     }
-
-                    override fun onQueryTextChange(p0: String?): Boolean = true
                 }
         )
 
