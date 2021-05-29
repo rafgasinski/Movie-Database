@@ -58,18 +58,6 @@ class DashboardActivity : AppCompatActivity() {
                     binding.toolbarTitle.text = destination.label
                     binding.toolbar.contentInsetStartWithNavigation = 0
                 }
-                R.id.detailsFragment -> {
-                    val sharedPrefMovieDetail: SharedPreferences? = this.getSharedPreferences(
-                            Constants.SH_LAST_MOVIE_TITLE_KEY,
-                            Constants.PRIVATE_MODE
-                    )
-
-                    val movieId = sharedPrefMovieDetail?.getString(Constants.SH_LAST_MOVIE_TITLE_KEY, "")
-
-                    binding.toolbar.contentInsetStartWithNavigation = 220
-                    binding.toolbarTitle.gravity = Gravity.CENTER_VERTICAL
-                    binding.toolbarTitle.text = movieId
-                }
                 else -> {
                     this.getSharedPreferences(Constants.SH_DISCOVER_RECYCLER_POSITION_KEY, Constants.PRIVATE_MODE)
                         ?.edit()?.putInt(Constants.SH_DISCOVER_RECYCLER_POSITION_KEY, 0)?.apply()

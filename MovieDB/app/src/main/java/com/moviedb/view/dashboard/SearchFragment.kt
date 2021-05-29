@@ -213,16 +213,13 @@ class SearchFragment : Fragment() {
             override fun onClick(searchMovie: SearchMovie) {
 
                 /**
-                 * Save selected movie position in recycler, title and id in SharedPreferences,
+                 * Save selected movie position in recycler, id in SharedPreferences,
                  * navigate to movie details fragment
                  * */
                 val sharedPrefRecommendedPosition: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_SEARCH_RECOMMENDED_POSITION_KEY, Constants.PRIVATE_MODE)
                 sharedPrefRecommendedPosition?.edit()?.putInt(Constants.SH_SEARCH_RECOMMENDED_POSITION_KEY, adapterRecommended.list.indexOf(searchMovie))?.clear()?.apply()
 
                 val action = SearchFragmentDirections.actionSearchFragmentToDetailsFragment(searchMovie.id)
-
-                val sharedPrefTitle: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_LAST_MOVIE_TITLE_KEY, Constants.PRIVATE_MODE)
-                sharedPrefTitle?.edit()?.putString(Constants.SH_LAST_MOVIE_TITLE_KEY, searchMovie.title)?.clear()?.apply()
 
                 Navigation.findNavController(view!!).navigate(action)
             }
@@ -234,16 +231,13 @@ class SearchFragment : Fragment() {
             override fun onClick(searchMovie: SearchMovie) {
 
                 /**
-                 * Save selected movie position in recycler, title and id in SharedPreferences,
+                 * Save selected movie position in recycler, id in SharedPreferences,
                  * navigate to movie details fragment
                  * */
                 val sharedPrefRecommendedPosition: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_SEARCH_POSITION_KEY, Constants.PRIVATE_MODE)
                 sharedPrefRecommendedPosition?.edit()?.putInt(Constants.SH_SEARCH_POSITION_KEY, adapterSearch.list.indexOf(searchMovie))?.clear()?.apply()
 
                 val action = SearchFragmentDirections.actionSearchFragmentToDetailsFragment(searchMovie.id, )
-
-                val sharedPrefTitle: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_LAST_MOVIE_TITLE_KEY, Constants.PRIVATE_MODE)
-                sharedPrefTitle?.edit()?.putString(Constants.SH_LAST_MOVIE_TITLE_KEY, searchMovie.title)?.clear()?.apply()
 
                 Navigation.findNavController(view!!).navigate(action)
             }

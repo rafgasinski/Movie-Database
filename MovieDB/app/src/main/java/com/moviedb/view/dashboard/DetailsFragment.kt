@@ -2,6 +2,7 @@ package com.moviedb.view.dashboard
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -9,10 +10,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.SnapHelper
@@ -28,10 +31,13 @@ import com.moviedb.adapters.CastAdapter
 import com.moviedb.adapters.MovieDetailGenreAdapter
 import com.moviedb.adapters.VideosAdapter
 import com.moviedb.databinding.FragmentDetailsBinding
+import com.moviedb.listeners.OnClickCastItem
 import com.moviedb.listeners.OnClickVideoTrailer
 import com.moviedb.model.repositories.FirebaseMovie
+import com.moviedb.model.response.cast.Cast
 import com.moviedb.model.response.movie.DetailResponse
 import com.moviedb.model.response.movie.MovieVideo
+import com.moviedb.utils.Constants
 import com.moviedb.utils.Constants.BACKDROP_IMAGE
 import com.moviedb.viewmodel.DetailViewModel
 import java.text.SimpleDateFormat
@@ -54,6 +60,7 @@ class DetailsFragment : Fragment() {
     private val args : DetailsFragmentArgs by navArgs()
 
     private lateinit var toolbar : androidx.appcompat.widget.Toolbar
+    private lateinit var toolbarTitle : TextView
 
     /**
      * FirebaseAuth Instance
@@ -90,6 +97,8 @@ class DetailsFragment : Fragment() {
         toolbar.setNavigationOnClickListener {
             activity?.onBackPressed()
         }
+
+        toolbarTitle = activity?.findViewById(R.id.toolbar_title)!!
 
         return binding.root
     }
@@ -187,6 +196,21 @@ class DetailsFragment : Fragment() {
     private fun setListCastGenresTrailers(){
         binding.recyclerViewCast.setHasFixedSize(true)
         binding.recyclerViewCast.adapter = adapterCast
+
+        adapterCast.onClickCastItem = object : OnClickCastItem {
+            override fun onClick(cast: Cast) {
+                val action = DetailsFragmentDirections.actionDetailsFragmentToCastFragment(cast.id)
+
+                /**
+                 * Save person name and id in SharedPreferences,
+                 * navigate to cast details fragment
+                 * */
+                val sharedPrefTitle: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_LAST_SELECTED_CAST_NAME, Constants.PRIVATE_MODE)
+                sharedPrefTitle?.edit()?.putString(Constants.SH_LAST_SELECTED_CAST_NAME, cast.name)?.clear()?.apply()
+
+                Navigation.findNavController(view!!).navigate(action)
+            }
+        }
 
         binding.recyclerViewMovieGenres.setHasFixedSize(true)
         binding.recyclerViewMovieGenres.adapter = adapterGenres
@@ -293,6 +317,7 @@ class DetailsFragment : Fragment() {
         binding.watchedCheckbox.visibility = View.VISIBLE
 
         binding.titleDetail.text = detailResponse.title
+        toolbarTitle.text = detailResponse.title
         binding.score.text = detailResponse.score
         binding.scoreStars.background.level = ((detailResponse.score.toDouble() * 1000) + 700).toInt()
 

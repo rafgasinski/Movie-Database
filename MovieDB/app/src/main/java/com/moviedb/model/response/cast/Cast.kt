@@ -4,9 +4,9 @@ import com.google.gson.annotations.SerializedName
 
 data class Cast(
     @SerializedName("id")
-    val id: Int,
+    val id: String,
     @SerializedName("original_name")
     val name: String,
     @SerializedName("profile_path")
-    val profil: String
+    val profile: String
 )

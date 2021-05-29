@@ -229,12 +229,9 @@ open class HomeFragment : Fragment() {
                 val action = HomeFragmentDirections.actionHomeFragmentToDetailsFragment(homeMovie.id)
 
                 /**
-                 * Save movie title and id in SharedPreferences,
+                 * Save movieId in SharedPreferences,
                  * navigate to movie details fragment
                  * */
-                val sharedPrefTitle: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_LAST_MOVIE_TITLE_KEY, Constants.PRIVATE_MODE)
-                sharedPrefTitle?.edit()?.putString(Constants.SH_LAST_MOVIE_TITLE_KEY, homeMovie.title)?.clear()?.apply()
-
                 val sharedPrefId: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_LAST_MOVIE_DETAIL_ID_KEY, Constants.PRIVATE_MODE)
                 sharedPrefId?.edit()?.putString(Constants.SH_LAST_MOVIE_DETAIL_ID_KEY, homeMovie.id)?.clear()?.apply()
 
@@ -254,14 +251,11 @@ open class HomeFragment : Fragment() {
                 val action = HomeFragmentDirections.actionHomeFragmentToDetailsFragment(homeMovie.id)
 
                 /**
-                 * Save selected movie position in recycler, title and id in SharedPreferences,
+                 * Save selected movie position in recycler, id in SharedPreferences,
                  * navigate to movie details fragment
                  * */
                 activity?.getSharedPreferences(Constants.SH_DISCOVER_RECYCLER_POSITION_KEY, Constants.PRIVATE_MODE)
                     ?.edit()?.putInt(Constants.SH_DISCOVER_RECYCLER_POSITION_KEY, adapterDiscoverGenre.list.indexOf(homeMovie))?.apply()
-
-                activity?.getSharedPreferences(Constants.SH_LAST_MOVIE_TITLE_KEY, Constants.PRIVATE_MODE)
-                    ?.edit()?.putString(Constants.SH_LAST_MOVIE_TITLE_KEY, homeMovie.title)?.clear()?.apply()
 
                 activity?.getSharedPreferences(Constants.SH_LAST_MOVIE_DETAIL_ID_KEY, Constants.PRIVATE_MODE)
                     ?.edit()?.putString(Constants.SH_LAST_MOVIE_DETAIL_ID_KEY, homeMovie.id)?.clear()?.apply()
@@ -303,12 +297,9 @@ open class HomeFragment : Fragment() {
             override fun onItemSelected(position: Int) {
 
                 /**
-                 * Save movie title and id in SharedPreferences,
+                 * Save movieId in SharedPreferences,
                  * navigate to movie details fragment
                  * */
-                val sharedPrefTitle: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_LAST_MOVIE_TITLE_KEY, Constants.PRIVATE_MODE)
-                sharedPrefTitle?.edit()?.putString(Constants.SH_LAST_MOVIE_TITLE_KEY, data[position].title)?.clear()?.apply()
-
                 val sharedPrefId: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_LAST_MOVIE_DETAIL_ID_KEY, Constants.PRIVATE_MODE)
                 sharedPrefId?.edit()?.putString(Constants.SH_LAST_MOVIE_DETAIL_ID_KEY, data[position].id)?.clear()?.apply()
 

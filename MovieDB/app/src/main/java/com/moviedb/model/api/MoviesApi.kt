@@ -1,11 +1,13 @@
 package com.moviedb.model.api
 
+import com.moviedb.model.response.cast.CastDetails
 import com.moviedb.model.response.cast.CastResponse
 import com.moviedb.model.response.discover.DiscoverMoviesResponse
 import com.moviedb.model.response.movie.DetailResponse
 import com.moviedb.model.response.genre.GenresList
 import com.moviedb.model.response.search.SearchResponse
 import com.moviedb.model.response.home.HomeMovieResponse
+import com.moviedb.model.response.home.MovieCreditsResponse
 import com.moviedb.utils.Constants
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -43,6 +45,12 @@ interface MoviesApi {
 
     @GET("movie/{movie_id}/recommendations")
     suspend fun getRecommendations(@Path("movie_id") movieId: String, @Query("page") page: String = Constants.PAGE): Response<SearchResponse>
+
+    @GET("person/{person_id}")
+    suspend fun getPersonDetails(@Path("person_id") personId: String) : Response<CastDetails>
+
+    @GET("person/{person_id}/movie_credits")
+    suspend fun getMovieCredits(@Path("person_id") personId: String) : Response<MovieCreditsResponse>
 
     companion object {
         operator fun invoke(): MoviesApi {

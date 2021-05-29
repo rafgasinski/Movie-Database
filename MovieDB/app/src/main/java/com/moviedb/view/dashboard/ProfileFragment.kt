@@ -115,7 +115,7 @@ class ProfileFragment : Fragment() {
          * from his login account (e.g Google)
          * */
         profilePicReference.downloadUrl.addOnSuccessListener {
-            Glide.with(requireContext())
+            Glide.with(view)
                     .load(it)
                     .placeholder(R.drawable.placeholder_transparent)
                     .into(binding.profilePicture)
@@ -133,7 +133,7 @@ class ProfileFragment : Fragment() {
          * Load user's backdrop picture from Firebase
          * */
         backgroundPicReference.downloadUrl.addOnSuccessListener {
-            Glide.with(requireContext())
+            Glide.with(view)
                 .load(it)
                 .placeholder(R.drawable.placeholder_transparent)
                 .centerCrop()
@@ -353,14 +353,10 @@ class ProfileFragment : Fragment() {
      * Set list in adapter and override onClickListener
      * */
     private fun setListMovies() {
-        binding.recyclerViewProfile.setHasFixedSize(true)
         binding.recyclerViewProfile.adapter = adapterProfileMovies
         adapterProfileMovies.onClickHomeListener = object : OnClickProfileMovie {
             override fun onClick(firebaseMovie: FirebaseMovie) {
                 val action = ProfileFragmentDirections.actionProfileFragmentToDetailsFragment(firebaseMovie.id)
-
-                val sharedPrefTitle: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_LAST_MOVIE_TITLE_KEY, Constants.PRIVATE_MODE)
-                sharedPrefTitle?.edit()?.putString(Constants.SH_LAST_MOVIE_TITLE_KEY, firebaseMovie.title)?.clear()?.apply()
 
                 val sharedPrefId: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_LAST_MOVIE_DETAIL_ID_KEY, Constants.PRIVATE_MODE)
                 sharedPrefId?.edit()?.putString(Constants.SH_LAST_MOVIE_DETAIL_ID_KEY, firebaseMovie.id)?.clear()?.apply()

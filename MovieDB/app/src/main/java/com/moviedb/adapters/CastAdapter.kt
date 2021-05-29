@@ -8,12 +8,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.moviedb.R
+import com.moviedb.listeners.OnClickCastItem
 import com.moviedb.model.response.cast.Cast
 import com.moviedb.utils.Constants
 
 class CastAdapter(var castTextInfo: TextView) : RecyclerView.Adapter<CastAdapter.CastViewHolder>() {
 
     private var list: MutableList<Cast> = mutableListOf()
+    var onClickCastItem: OnClickCastItem? = null
 
     inner class CastViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -22,9 +24,12 @@ class CastAdapter(var castTextInfo: TextView) : RecyclerView.Adapter<CastAdapter
         var castSurname: TextView = view.findViewById(R.id.cast_surname)
 
         fun bind(cast: Cast) {
+            itemView.setOnClickListener {
+                onClickCastItem?.onClick(cast)
+            }
 
             Glide.with(itemView)
-                    .load("${Constants.CAST_IMAGE}${cast.profil}")
+                    .load("${Constants.CAST_IMAGE}${cast.profile}")
                     .placeholder(R.drawable.placeholder_transparent)
                     .into(castPhoto)
 
