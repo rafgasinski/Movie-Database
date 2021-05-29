@@ -98,8 +98,6 @@ class DetailsFragment : Fragment() {
             activity?.onBackPressed()
         }
 
-        toolbarTitle = activity?.findViewById(R.id.toolbar_title)!!
-
         return binding.root
     }
 
@@ -107,6 +105,8 @@ class DetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val movieId = args.movieId
+
+        toolbarTitle = activity?.findViewById(R.id.toolbar_title)!!
 
         trailerSnapHelper = LinearSnapHelper()
 
@@ -321,7 +321,7 @@ class DetailsFragment : Fragment() {
         binding.score.text = detailResponse.score
         binding.scoreStars.background.level = ((detailResponse.score.toDouble() * 1000) + 700).toInt()
 
-        var genresList = detailResponse.genres.map { it.nameGenre }.toList()
+        val genresList = detailResponse.genres.map { it.nameGenre }.toList()
         adapterGenres.setDataMovieGenres(genresList)
 
         firebaseMovie.id  = detailResponse.id.toString()

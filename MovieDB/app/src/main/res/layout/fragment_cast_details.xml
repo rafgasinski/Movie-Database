@@ -58,6 +58,7 @@
                         android:textSize="18sp"
                         android:paddingTop="12dp"
                         android:paddingBottom="6dp"
+                        android:visibility="gone"
                         android:textColor="@color/white"
                         android:textStyle="bold"
                         tools:text="Brad Pitt" />
@@ -67,7 +68,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
-                        android:text="@string/birthday"
+                        android:text="Born"
+                        android:visibility="gone"
                         android:textColor="@color/textHint"
                         android:textSize="14sp"/>
 
@@ -77,8 +79,29 @@
                         android:layout_height="wrap_content"
                         android:textSize="14sp"
                         android:paddingTop="5dp"
+                        android:visibility="gone"
                         android:textColor="@color/white"
                         tools:text="1963-03-17" />
+
+                    <TextView
+                        android:id="@+id/deathday_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="@string/died"
+                        android:visibility="gone"
+                        android:textColor="@color/textHint"
+                        android:textSize="14sp"/>
+
+                    <TextView
+                        android:id="@+id/deathday"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:paddingTop="5dp"
+                        android:visibility="gone"
+                        android:textColor="@color/white"
+                        tools:text="2011-03-17" />
 
                     <TextView
                         android:id="@+id/birthplace_info"
@@ -86,6 +109,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
                         android:text="@string/birthplace"
+                        android:visibility="gone"
                         android:textColor="@color/textHint"
                         android:textSize="14sp"/>
 
@@ -95,6 +119,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="14sp"
                         android:paddingTop="5dp"
+                        android:visibility="gone"
                         android:textColor="@color/white"
                         tools:text="Shawnee, Oklahoma, USA" />
 
@@ -116,6 +141,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/biography"
+                    android:visibility="gone"
                     android:textColor="@color/textHint"
                     android:textSize="16sp"/>
 
@@ -127,6 +153,7 @@
                     tools:text="William Bradley Pitt is an American actor and film producer. He has received multiple awards, including two Golden Globe Awards and an Academy Award for his acting, in addition to another Academy Award and a Primetime Emmy Award as producer under his production company, Plan B Entertainment."
                     android:textColor="@color/text"
                     android:textSize="14sp"
+                    android:visibility="gone"
                     android:justificationMode="inter_word"/>
 
                 <TextView
@@ -135,6 +162,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/known_for"
+                    android:visibility="gone"
                     android:textColor="@color/textHint"
                     android:textSize="16sp"/>
 
@@ -146,6 +174,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:elevation="8dp"
+                    android:visibility="gone"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:itemCount="3"
                     tools:listitem="@layout/item_movie"/>

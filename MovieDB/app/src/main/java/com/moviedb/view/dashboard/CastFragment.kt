@@ -18,22 +18,14 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.google.firebase.auth.FirebaseAuth
 import com.moviedb.R
-import com.moviedb.adapters.CastAdapter
 import com.moviedb.adapters.HomeMovieAdapter
-import com.moviedb.adapters.MovieDetailGenreAdapter
 import com.moviedb.databinding.FragmentCastDetailsBinding
-import com.moviedb.databinding.FragmentDetailsBinding
 import com.moviedb.listeners.OnClickHomeMovie
-import com.moviedb.model.repositories.FirebaseMovie
 import com.moviedb.model.response.cast.CastDetails
-import com.moviedb.model.response.cast.CastResponse
 import com.moviedb.model.response.home.HomeMovie
-import com.moviedb.model.response.movie.DetailResponse
 import com.moviedb.utils.Constants
 import com.moviedb.viewmodel.CastViewModel
-import com.moviedb.viewmodel.DetailViewModel
 
 class CastFragment : Fragment() {
 
@@ -68,13 +60,14 @@ class CastFragment : Fragment() {
         toolbar.setNavigationOnClickListener {
             activity?.onBackPressed()
         }
-        toolbarTitle = activity?.findViewById(R.id.toolbar_title)!!
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        toolbarTitle = activity?.findViewById(R.id.toolbar_title)!!
 
         viewModel.getPersonDetails(args.castId)
         viewModel.getMovieCredits(args.castId)
@@ -113,6 +106,10 @@ class CastFragment : Fragment() {
     private fun observeMovieCredits(){
         viewModel.movieCreditsResponse.observe(viewLifecycleOwner, {
             adapterMovieCredits.setDataHomeMovies(it)
+            if(it.isNotEmpty()){
+                binding.castInfo.visibility = View.VISIBLE
+                binding.recyclerViewPersonMovies.visibility = View.VISIBLE
+            }
         })
     }
 
@@ -122,6 +119,7 @@ class CastFragment : Fragment() {
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                        binding.profilePictureCardview.visibility = View.GONE
                         return false
                     }
 
@@ -140,32 +138,32 @@ class CastFragment : Fragment() {
         if(!castDetails.name.isNullOrEmpty()){
             binding.personName.text = castDetails.name
             toolbarTitle.text = castDetails.name
-        } else{
-            binding.personName.visibility = View.GONE
-        }
-
-        if(!castDetails.placeOfBirth.isNullOrEmpty()){
-            binding.birthplace.text = castDetails.placeOfBirth
-        } else{
-            binding.birthplace.visibility = View.GONE
-            binding.birthplaceInfo.visibility = View.GONE
+            binding.personName.visibility = View.VISIBLE
         }
 
         if(!castDetails.birthday.isNullOrEmpty()){
             binding.birthday.text = castDetails.birthday
-        } else{
-            binding.birthday.visibility = View.GONE
-            binding.birthdayInfo.visibility = View.GONE
+            binding.birthday.visibility = View.VISIBLE
+            binding.birthdayInfo.visibility = View.VISIBLE
+        }
+
+        if(!castDetails.deathday.isNullOrEmpty()){
+            binding.deathday.text = castDetails.deathday
+            binding.deathday.visibility = View.VISIBLE
+            binding.deathdayInfo.visibility = View.VISIBLE
+        }
+
+        if(!castDetails.placeOfBirth.isNullOrEmpty()){
+            binding.birthplace.text = castDetails.placeOfBirth
+            binding.birthplace.visibility = View.VISIBLE
+            binding.birthplaceInfo.visibility = View.VISIBLE
         }
 
         if(!castDetails.biography.isNullOrEmpty()){
             binding.biography.text = castDetails.biography
-        } else{
-            binding.biography.visibility = View.GONE
-            binding.biographyInfo.visibility = View.GONE
+            binding.biography.visibility = View.VISIBLE
+            binding.biographyInfo.visibility = View.VISIBLE
         }
     }
-
-
 
 }
