@@ -1,23 +1,17 @@
 package com.moviedb.view.dashboard
 
 import android.content.SharedPreferences
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
 import com.moviedb.R
 import com.moviedb.adapters.HomeMovieAdapter
 import com.moviedb.databinding.FragmentCastDetailsBinding
@@ -38,7 +32,7 @@ class CastFragment : Fragment() {
     private val args : CastFragmentArgs by navArgs()
 
     private lateinit var toolbar : androidx.appcompat.widget.Toolbar
-    private lateinit var toolbarTitle : TextView
+    private var toolbarTitle : TextView? = null
 
     /**
      * ViewModel and recyclerView adapter
@@ -67,7 +61,7 @@ class CastFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        toolbarTitle = activity?.findViewById(R.id.toolbar_title)!!
+        toolbarTitle = activity?.findViewById(R.id.toolbar_title)
 
         viewModel.getPersonDetails(args.castId)
         viewModel.getMovieCredits(args.castId)
@@ -116,20 +110,9 @@ class CastFragment : Fragment() {
     private fun loadProfilePicture(profilePath: String) {
         Glide.with(this)
                 .load("${Constants.POSTER_IMAGE}${profilePath}")
+                .placeholder(R.drawable.placeholder_transparent)
                 .transition(DrawableTransitionOptions.withCrossFade())
-                .listener(object : RequestListener<Drawable> {
-                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                        binding.profilePictureCardview.visibility = View.GONE
-                        return false
-                    }
-
-                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                        val animation = AnimationUtils.loadAnimation(binding.personProfilePicture.context, R.anim.fadein)
-                        binding.personProfilePicture.startAnimation(animation)
-                        return false
-                    }
-
-                })
+                .error(R.drawable.cast_error)
                 .centerCrop()
                 .into(binding.personProfilePicture)
     }
@@ -137,14 +120,14 @@ class CastFragment : Fragment() {
     private fun loadPersonDetails(castDetails: CastDetails) {
         if(!castDetails.name.isNullOrEmpty()){
             binding.personName.text = castDetails.name
-            toolbarTitle.text = castDetails.name
+            toolbarTitle?.text = castDetails.name
             binding.personName.visibility = View.VISIBLE
         }
 
         if(!castDetails.birthday.isNullOrEmpty()){
             binding.birthday.text = castDetails.birthday
-            binding.birthday.visibility = View.VISIBLE
-            binding.birthdayInfo.visibility = View.VISIBLE
+        } else {
+            binding.birthday.text = resources.getString(R.string.unknown)
         }
 
         if(!castDetails.deathday.isNullOrEmpty()){
@@ -155,8 +138,8 @@ class CastFragment : Fragment() {
 
         if(!castDetails.placeOfBirth.isNullOrEmpty()){
             binding.birthplace.text = castDetails.placeOfBirth
-            binding.birthplace.visibility = View.VISIBLE
-            binding.birthplaceInfo.visibility = View.VISIBLE
+        } else {
+            binding.birthplace.text = resources.getString(R.string.unknown)
         }
 
         if(!castDetails.biography.isNullOrEmpty()){

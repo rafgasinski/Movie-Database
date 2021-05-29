@@ -60,7 +60,7 @@ class DetailsFragment : Fragment() {
     private val args : DetailsFragmentArgs by navArgs()
 
     private lateinit var toolbar : androidx.appcompat.widget.Toolbar
-    private lateinit var toolbarTitle : TextView
+    private var toolbarTitle : TextView? = null
 
     /**
      * FirebaseAuth Instance
@@ -106,7 +106,7 @@ class DetailsFragment : Fragment() {
 
         val movieId = args.movieId
 
-        toolbarTitle = activity?.findViewById(R.id.toolbar_title)!!
+        toolbarTitle = activity?.findViewById(R.id.toolbar_title)
 
         trailerSnapHelper = LinearSnapHelper()
 
@@ -270,18 +270,6 @@ class DetailsFragment : Fragment() {
         Glide.with(this)
                 .load("$BACKDROP_IMAGE${backdropPath}")
                 .transition(DrawableTransitionOptions.withCrossFade())
-                .listener(object : RequestListener<Drawable> {
-                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                        return false
-                    }
-
-                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                        val animation = AnimationUtils.loadAnimation(binding.backdrop.context, R.anim.fadein)
-                        binding.backdrop.startAnimation(animation)
-                        return false
-                    }
-
-                })
                 .centerCrop()
                 .into(binding.backdrop)
     }
@@ -317,7 +305,7 @@ class DetailsFragment : Fragment() {
         binding.watchedCheckbox.visibility = View.VISIBLE
 
         binding.titleDetail.text = detailResponse.title
-        toolbarTitle.text = detailResponse.title
+        toolbarTitle?.text = detailResponse.title
         binding.score.text = detailResponse.score
         binding.scoreStars.background.level = ((detailResponse.score.toDouble() * 1000) + 700).toInt()
 

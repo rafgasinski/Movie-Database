@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -29,6 +30,7 @@ import com.moviedb.model.response.home.HomeMovie
 import com.moviedb.utils.Constants
 import com.moviedb.utils.Constants.BACKDROP_IMAGE
 import com.moviedb.viewmodel.HomeViewModel
+import com.orhanobut.hawk.Hawk
 
 
 open class HomeFragment : Fragment() {
@@ -93,19 +95,21 @@ open class HomeFragment : Fragment() {
         /**
          * Get last chosen position in discover recyclerView
          * */
-        val sharedPrefDiscoverPosition: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_DISCOVER_RECYCLER_POSITION_KEY, Constants.PRIVATE_MODE)
-        val lastRecyclerDiscoverPosition = sharedPrefDiscoverPosition?.getInt(Constants.SH_DISCOVER_RECYCLER_POSITION_KEY, 0)
+        Hawk.init(context).build()
+        if(Hawk.contains(Constants.SH_DISCOVER_RECYCLER_POSITION_KEY)){
+            val lastRecyclerDiscoverPosition : Int = Hawk.get(Constants.SH_DISCOVER_RECYCLER_POSITION_KEY)
 
-        /**
-         * Scroll to last chosen position in discover recyclerView
-         * */
-        if(lastRecyclerDiscoverPosition != 0 && lastRecyclerDiscoverPosition != null){
-            binding.selectedGenreRecyclerView.alpha = 0f
-            binding.selectedGenreRecyclerView.animate().withStartAction{
-                Handler(Looper.getMainLooper()).postDelayed({
-                    binding.selectedGenreRecyclerView.smoothScrollToPosition(lastRecyclerDiscoverPosition)
-                }, 400)
-            }.setDuration(1200).alpha(1f)
+            /**
+             * Scroll to last chosen position in discover recyclerView
+             * */
+            if(lastRecyclerDiscoverPosition != 0 && lastRecyclerDiscoverPosition != null){
+                binding.selectedGenreRecyclerView.alpha = 0f
+                binding.selectedGenreRecyclerView.animate().withStartAction{
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        binding.selectedGenreRecyclerView.smoothScrollToPosition(lastRecyclerDiscoverPosition)
+                    }, 300)
+                }.setDuration(1200).alpha(1f)
+            }
         }
 
         /**
@@ -151,9 +155,6 @@ open class HomeFragment : Fragment() {
                 val sharedPrefSelectedTab: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_DISCOVER_SELECTED_TAB_KEY, Constants.PRIVATE_MODE)
                 tab?.let { sharedPrefSelectedTab?.edit()?.putInt(Constants.SH_DISCOVER_SELECTED_TAB_KEY, it.position)?.apply() }
 
-                activity?.getSharedPreferences(Constants.SH_DISCOVER_RECYCLER_POSITION_KEY, Constants.PRIVATE_MODE)
-                    ?.edit()?.putInt(Constants.SH_DISCOVER_RECYCLER_POSITION_KEY, 0)?.apply()
-
                 /**
                  * Change recycler item list based on selected genre
                  * */
@@ -161,6 +162,8 @@ open class HomeFragment : Fragment() {
                     viewModel.getDiscoverGenre(genresList[tab.position].id)
                     binding.selectedGenreRecyclerView.smoothScrollToPosition(0)
                 }
+
+                Hawk.put(Constants.SH_DISCOVER_RECYCLER_POSITION_KEY, 0)
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -248,14 +251,13 @@ open class HomeFragment : Fragment() {
         binding.selectedGenreRecyclerView.adapter = adapterDiscoverGenre
         adapterDiscoverGenre.onClickHomeListener = object : OnClickHomeMovie{
             override fun onClick(homeMovie: HomeMovie) {
+                /**
+                 * Save selected movie position in recycler, id
+                 * and navigate to movie details fragment
+                 * */
                 val action = HomeFragmentDirections.actionHomeFragmentToDetailsFragment(homeMovie.id)
 
-                /**
-                 * Save selected movie position in recycler, id in SharedPreferences,
-                 * navigate to movie details fragment
-                 * */
-                activity?.getSharedPreferences(Constants.SH_DISCOVER_RECYCLER_POSITION_KEY, Constants.PRIVATE_MODE)
-                    ?.edit()?.putInt(Constants.SH_DISCOVER_RECYCLER_POSITION_KEY, adapterDiscoverGenre.list.indexOf(homeMovie))?.apply()
+                Hawk.put(Constants.SH_DISCOVER_RECYCLER_POSITION_KEY, adapterDiscoverGenre.list.indexOf(homeMovie))
 
                 activity?.getSharedPreferences(Constants.SH_LAST_MOVIE_DETAIL_ID_KEY, Constants.PRIVATE_MODE)
                     ?.edit()?.putString(Constants.SH_LAST_MOVIE_DETAIL_ID_KEY, homeMovie.id)?.clear()?.apply()

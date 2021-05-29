@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
@@ -55,14 +56,14 @@ class ProfileMovieAdapter(var viewModel: ProfileViewModel): RecyclerView.Adapter
                     .placeholder(R.drawable.placeholder_transparent)
                     .listener(object : RequestListener<Drawable> {
                         override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                            /*var animation = AnimationUtils.loadAnimation(backdrop.context, R.anim.fadeout)
+                            /*val animation = AnimationUtils.loadAnimation(backdrop.context, R.anim.fadeout)
                             backdropCard.startAnimation(animation)*/
                             backdropCard.visibility = View.GONE
                             return true
                         }
 
                         override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                            /*var animation = AnimationUtils.loadAnimation(backdrop.context, R.anim.fadein)
+                            /*val animation = AnimationUtils.loadAnimation(backdrop.context, R.anim.fadein)
                             backdropCard.startAnimation(animation)*/
                             backdropCard.visibility = View.VISIBLE
                             return false

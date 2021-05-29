@@ -96,6 +96,16 @@ class ProfileFragment : Fragment() {
             activity?.onBackPressed()
         }
 
+        /**
+         * Remove recommended recycler movie position
+         * and search position from SharedPreferences
+         * */
+        val sharedPrefRecommended: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_SEARCH_RECOMMENDED_POSITION_KEY, Constants.PRIVATE_MODE)
+        sharedPrefRecommended?.edit()?.remove(Constants.SH_SEARCH_RECOMMENDED_POSITION_KEY)?.clear()?.apply()
+
+        val sharedPrefSearch: SharedPreferences? = activity?.getSharedPreferences(Constants.SH_SEARCH_POSITION_KEY, Constants.PRIVATE_MODE)
+        sharedPrefSearch?.edit()?.remove(Constants.SH_SEARCH_POSITION_KEY)?.clear()?.apply()
+
         return binding.root
     }
 

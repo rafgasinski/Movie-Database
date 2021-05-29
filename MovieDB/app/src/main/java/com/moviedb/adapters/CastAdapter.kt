@@ -31,6 +31,7 @@ class CastAdapter(var castTextInfo: TextView) : RecyclerView.Adapter<CastAdapter
             Glide.with(itemView)
                     .load("${Constants.CAST_IMAGE}${cast.profile}")
                     .placeholder(R.drawable.placeholder_transparent)
+                    .error(R.drawable.cast_error)
                     .into(castPhoto)
 
             val fullName = cast.name.split(" ")
