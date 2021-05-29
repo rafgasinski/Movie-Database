@@ -43,5 +43,6 @@
     <string name="birthday">Birthday</string>
     <string name="birthplace">Birthplace</string>
     <string name="died">Died</string>
+    <string name="unknown">Unknown</string>
 
 </resources>

@@ -11,9 +11,7 @@
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_detailsFragment"
-            app:destination="@id/detailsFragment"
-            app:popUpTo="@id/detailsFragment"
-            app:popUpToInclusive="true"/>
+            app:destination="@id/detailsFragment" />
         <action
             android:id="@+id/action_homeFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
@@ -24,9 +22,7 @@
         android:label="Search" >
         <action
             android:id="@+id/action_searchFragment_to_detailsFragment"
-            app:destination="@id/detailsFragment"
-            app:popUpTo="@id/detailsFragment"
-            app:popUpToInclusive="true"/>
+            app:destination="@id/detailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"

@@ -124,11 +124,9 @@ open class HomeFragment : Fragment() {
         if(lastSelectedTab != 0 && lastSelectedTab != null){
 
             binding.tabLayout.scrollX = binding.tabLayout.width
-
             Handler(Looper.getMainLooper()).postDelayed({
                 binding.tabLayout.getTabAt(lastSelectedTab)?.select()
-            }, 300)
-
+            }, 200)
         }
 
         observeDiscover()
