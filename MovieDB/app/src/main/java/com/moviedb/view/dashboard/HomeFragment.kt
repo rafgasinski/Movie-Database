@@ -102,7 +102,7 @@ open class HomeFragment : Fragment() {
             /**
              * Scroll to last chosen position in discover recyclerView
              * */
-            if(lastRecyclerDiscoverPosition != 0 && lastRecyclerDiscoverPosition != null){
+            if(lastRecyclerDiscoverPosition != 0){
                 binding.selectedGenreRecyclerView.alpha = 0f
                 binding.selectedGenreRecyclerView.animate().withStartAction{
                     Handler(Looper.getMainLooper()).postDelayed({
